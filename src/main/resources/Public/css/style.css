@@ -82,8 +82,7 @@ abbr[data-original-title] {
   -webkit-text-decoration: underline dotted;
   text-decoration: underline dotted;
   cursor: help;
-  border-bottom: 0;
-  text-decoration-skip-ink: none; }
+  border-bottom: 0; }
 
 address {
   margin-bottom: 1rem;
@@ -1736,7 +1735,7 @@ textarea.form-control {
   margin-bottom: 0; }
 
 .form-check-inline {
-  display: -webkit-inline-box;
+
   display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-box-align: center;
@@ -2725,7 +2724,7 @@ input[type="button"].btn-block {
 .btn-group,
 .btn-group-vertical {
   position: relative;
-  display: -webkit-inline-box;
+
   display: -ms-inline-flexbox;
   display: inline-flex;
   vertical-align: middle; }
@@ -2997,7 +2996,7 @@ input[type="button"].btn-block {
   padding-left: 1.5rem; }
 
 .custom-control-inline {
-  display: -webkit-inline-box;
+
   display: -ms-inline-flexbox;
   display: inline-flex;
   margin-right: 1rem; }
@@ -4659,7 +4658,6 @@ a.close.disabled {
   -webkit-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
   -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
   opacity: 0;
   border-radius: 0.25rem; }
   .toast:not(:last-child) {
@@ -5541,7 +5539,7 @@ button.bg-dark:focus {
   display: flex !important; }
 
 .d-inline-flex {
-  display: -webkit-inline-box !important;
+
   display: -ms-inline-flexbox !important;
   display: inline-flex !important; }
 
@@ -5565,7 +5563,7 @@ button.bg-dark:focus {
     display: -ms-flexbox !important;
     display: flex !important; }
   .d-sm-inline-flex {
-    display: -webkit-inline-box !important;
+
     display: -ms-inline-flexbox !important;
     display: inline-flex !important; } }
 
@@ -5589,7 +5587,7 @@ button.bg-dark:focus {
     display: -ms-flexbox !important;
     display: flex !important; }
   .d-md-inline-flex {
-    display: -webkit-inline-box !important;
+
     display: -ms-inline-flexbox !important;
     display: inline-flex !important; } }
 
@@ -5613,7 +5611,7 @@ button.bg-dark:focus {
     display: -ms-flexbox !important;
     display: flex !important; }
   .d-lg-inline-flex {
-    display: -webkit-inline-box !important;
+
     display: -ms-inline-flexbox !important;
     display: inline-flex !important; } }
 
@@ -5637,7 +5635,6 @@ button.bg-dark:focus {
     display: -ms-flexbox !important;
     display: flex !important; }
   .d-xl-inline-flex {
-    display: -webkit-inline-box !important;
     display: -ms-inline-flexbox !important;
     display: inline-flex !important; } }
 
@@ -5661,7 +5658,7 @@ button.bg-dark:focus {
     display: -ms-flexbox !important;
     display: flex !important; }
   .d-print-inline-flex {
-    display: -webkit-inline-box !important;
+
     display: -ms-inline-flexbox !important;
     display: inline-flex !important; } }
 
@@ -5833,7 +5830,6 @@ button.bg-dark:focus {
 
 .align-self-auto {
   -ms-flex-item-align: auto !important;
-  -ms-grid-row-align: auto !important;
   align-self: auto !important; }
 
 .align-self-start {
@@ -5965,7 +5961,7 @@ button.bg-dark:focus {
     align-content: stretch !important; }
   .align-self-sm-auto {
     -ms-flex-item-align: auto !important;
-    -ms-grid-row-align: auto !important;
+
     align-self: auto !important; }
   .align-self-sm-start {
     -ms-flex-item-align: start !important;
@@ -6092,7 +6088,6 @@ button.bg-dark:focus {
     align-content: stretch !important; }
   .align-self-md-auto {
     -ms-flex-item-align: auto !important;
-    -ms-grid-row-align: auto !important;
     align-self: auto !important; }
   .align-self-md-start {
     -ms-flex-item-align: start !important;
@@ -6219,7 +6214,6 @@ button.bg-dark:focus {
     align-content: stretch !important; }
   .align-self-lg-auto {
     -ms-flex-item-align: auto !important;
-    -ms-grid-row-align: auto !important;
     align-self: auto !important; }
   .align-self-lg-start {
     -ms-flex-item-align: start !important;
@@ -6346,7 +6340,6 @@ button.bg-dark:focus {
     align-content: stretch !important; }
   .align-self-xl-auto {
     -ms-flex-item-align: auto !important;
-    -ms-grid-row-align: auto !important;
     align-self: auto !important; }
   .align-self-xl-start {
     -ms-flex-item-align: start !important;
@@ -8051,7 +8044,6 @@ a.text-dark:hover, a.text-dark:focus {
   color: rgba(255, 255, 255, 0.5) !important; }
 
 .text-hide {
-  font: 0/0 a;
   color: transparent;
   text-shadow: none;
   background-color: transparent;
