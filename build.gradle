@@ -28,6 +28,8 @@ dependencies {
 
     //Procesamiento JSON para Javalin.
     implementation "com.fasterxml.jackson.core:jackson-databind:2.10.1"
+
+    implementation 'com.j2html:j2html:1.0.0'
 }
 
 test {

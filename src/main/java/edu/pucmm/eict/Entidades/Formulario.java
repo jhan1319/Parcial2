@@ -3,6 +3,7 @@ package edu.pucmm.eict.Entidades;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Entity
@@ -21,6 +22,9 @@ public class Formulario implements Serializable {
     private String latitud;
 
     private String longitud;
+
+    @ManyToOne
+    private Usuario user;
 
     public Formulario() {
     }

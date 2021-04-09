@@ -1,9 +1,8 @@
 package edu.pucmm.eict.Entidades;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 public class Usuario implements Serializable {
@@ -15,6 +14,9 @@ public class Usuario implements Serializable {
     private String usuario;
     private String password;
     private String rol;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<Formulario> formularioList;
 
 
     public Usuario() {

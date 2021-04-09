@@ -16,4 +16,6 @@ public class UsuarioServices extends GestionDB<Usuario> {
         return instancia;
     };
 
+
+
 }
