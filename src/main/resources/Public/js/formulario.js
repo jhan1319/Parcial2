@@ -45,7 +45,7 @@ $(document).ready(function (){
 
 
 
-        window.location.href = '/'
+        window.location.href = '/home'
         //webSocket.send(JSON.stringify(formData));
 
     });

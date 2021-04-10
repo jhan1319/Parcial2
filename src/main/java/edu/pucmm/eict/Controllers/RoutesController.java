@@ -80,9 +80,12 @@ public class RoutesController {
 
             });
 
+
+
             path("/home", () -> {
                 get("/", ctx -> ctx.render("Templates/home.html"));
                 get("/encuesta", ctx -> ctx.render("Templates/formulario.html"));
+                get("/mapa", ctx -> ctx.render("/Templates/map.html"));
 
             });
 
