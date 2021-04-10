@@ -33,6 +33,7 @@ public class RoutesController {
 
     public void routes(){
         app.get("/", ctx -> {ctx.render("Templates/login.html");});
+
         app.routes( () -> {
 
 
@@ -45,11 +46,10 @@ public class RoutesController {
                         UsuarioServices.getInstancia().findAll()) {
                     if (u.getUsuario().contentEquals(user.getUsuario())
                     && u.getPassword().contentEquals(user.getPassword())){
+
                         String a = aux.toJson(u, Usuario.class);
-
                         System.out.println("ESTO ES EL JSON: " + a);
-                        ctx.redirect("/home");
-
+                        ctx.result(a); //respuesta hacia el servidor
                     }else {
                         ctx.result("Error de credenciales");
                     }

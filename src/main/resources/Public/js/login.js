@@ -11,9 +11,11 @@ $(document).ready(function () {
             }
         }).then((response) => {
 
-            console.log("ESTA ES LA RESPUESTA: " + response.data);
+            console.log(response.data)
 
+            localStorage.setItem("loggedUser", JSON.stringify(response.data)); //Aqui se guarda el usuario completo en localStorage
 
+            window.location.href = '/home'
 
         }, (error) =>{
             console.log("ERROR EN LA RESPUESTA: "+error);
