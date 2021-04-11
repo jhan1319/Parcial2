@@ -13,6 +13,28 @@
             <div class="col-xs-12">
 
                 <h1 class="jumbotron">Listado de Formularios</h1>
+                <table>
+                    <tr>
+                        <th> <label for="name"> Nombre: </label> <input id="name" type="text" class="form-control" /> </th>
+                        <th> <label for="sector"> Sector: </label> <input id="sector" type="text" class="form-control" /> </th>
+                        <th> 
+                            <label for="nivel"> Nivel Academico: </label> 
+                            <!-- <input id="nivel" type="text" class="form-control"> -->
+                            <select name="nivel" id="nivel" class="form-control">
+                                <option value="Nivel Escolar" readonly>Nivel Escolar</option>
+                                <option value="Nivel Basico">Nivel Basico</option>
+                                <option value="Nivel Medio">Nivel Medio</option>
+                                <option value="Grado Universitario">Grado Universitario</option>
+                                <option value="Postgrado">Postgrado</option>
+                                <option value="Doctorado">Doctorado</option>
+                            </select> 
+                        </th>
+                        <th> <label for="latitud"> Latitud: </label> <input id="latitud" type="text" class="form-control" readonly/> </th>
+                        <th> <label for="longitud"> Longitud: </label> <input id="longitud" type="text" class="form-control" readonly /> </th>
+                        <th> <br><button id="btn-edit" class="btn btn-xs btn-danger" onclick="editElement()">editar</button> </th>
+                    </tr>
+                </table>
+                
 
                 <table id="grid" class="table table-striped">
                     <thead>
@@ -29,10 +51,12 @@
             </div>
         </div>
     </div>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
+        var elementToEdit = 0;
         window.onload = function () {
             var localStorageKeyName = 'forms';
+            
 
             loadFromLocalStorage();
 
@@ -59,22 +83,16 @@
             //     appendObjectToLocalStorage(form);
             // })
 
-            // function appendObjectToLocalStorage(obj) {
-            //     var formularios = [],
-            //         dataInLocalStorage = localStorage.getItem(localStorageKeyName);
+            function loadFromLocalStorage(formularioToEdit) {
 
-            //     if (dataInLocalStorage !== null) {
-            //         formularios = JSON.parse(dataInLocalStorage);
-            //     }
+                if (formularioToEdit != null) {            
+                    document.getElementById("name").value = formularioToEdit.nombre
+                    document.getElementById("sector").value = formularioToEdit.Sector
+                    document.getElementById("nivel").value = formularioToEdit.nivelEscolar
+                    document.getElementById("latitud").value = formularioToEdit.latitud
+                    document.getElementById("longitud").value = formularioToEdit.longitud
+                }
 
-            //     formularios.push(obj);
-
-            //     localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
-
-            //     loadFromLocalStorage();
-            // }
-
-            function loadFromLocalStorage() {
                 var formularios = [],
                     dataInLocalStorage = JSON.parse(localStorage.getItem("forms")),
                     gridBody = document.querySelector("#grid tbody");
@@ -87,8 +105,7 @@
                 gridBody.innerHTML = '';
 
                 formularios.forEach(function (x, i) {
-                    parsed = JSON.parse(x)
-                    console.log(parsed)
+                    parsed = JSON.parse(x)                    
                     var tr = document.createElement("tr"),
                         tdName = document.createElement("td"),
                         tdsector = document.createElement("td"),
@@ -97,6 +114,10 @@
                         tdLongitud = document.createElement("td")
                         tdRemove = document.createElement("td"),
                         btnRemove = document.createElement("button");
+                        tdEdit = document.createElement("td"),
+                        btnEdit = document.createElement("button");
+                        tdSend = document.createElement("td"),
+                        btnSend = document.createElement("button");                         
 
                     tdName.innerHTML = parsed.nombre;
                     tdsector.innerHTML = parsed.Sector;
@@ -104,13 +125,30 @@
                     tdLatitud.innerHTML = parsed.latitud;
                     tdLongitud.innerHTML = parsed.longitud;
 
+                    
+
                     btnRemove.textContent = 'Remove';
                     btnRemove.className = 'btn btn-xs btn-danger';
                     btnRemove.addEventListener('click', function(){
                         removeFromLocalStorage(i);
                     });
+                    tdEdit.appendChild(btnRemove);
 
-                    tdRemove.appendChild(btnRemove);
+                    btnEdit.textContent = 'Edit';
+                    btnEdit.className = 'btn btn-xs btn-danger';
+                    btnEdit.addEventListener('click', function(){
+                        editFromLocalStorage(i);
+                    });
+
+                    tdEdit.appendChild(btnEdit)
+
+                    btnSend.textContent = 'Send';
+                    btnSend.className = 'btn btn-xs btn-danger';
+                    btnSend.addEventListener('click', function(){
+                        sendFromLocalStorage(i);
+                    });
+
+                    tdSend.appendChild(btnSend)
 
                     tr.appendChild(tdName);
                     tr.appendChild(tdsector);
@@ -118,6 +156,7 @@
                     tr.appendChild(tdLatitud);
                     tr.appendChild(tdLongitud);
                     tr.appendChild(tdRemove);
+                    tr.appendChild(tdEdit);
                     
 
                     gridBody.appendChild(tr);
@@ -128,16 +167,46 @@
                 var formularios = [],
                     dataInLocalStorage = JSON.parse(localStorage.getItem("forms"));
                                         
-                formularios = dataInLocalStorage;
-                console.log(formularios)
+                formularios = dataInLocalStorage;                
                 formularios.splice(i, 1);
-                console.log(i)
-                console.log(formularios)
                 localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
                 
                 loadFromLocalStorage();
             }
+            function editFromLocalStorage(i){
+                var formulario = null,
+                    dataInLocalStorage = JSON.parse(localStorage.getItem("forms"));
+                formulario = JSON.parse(dataInLocalStorage[i]) 
+                elementToEdit = i;    
+                loadFromLocalStorage(formulario);                
+            }
+            function sendFromLocalStorage(i){
+                
+            }             
         }
+        function editElement(){
+                var nombre = document.getElementById("name").value
+                var sector = document.getElementById("sector").value
+                var nivel  = document.getElementById("nivel").value
+                var latitud = document.getElementById("latitud").value
+                var longitud = document.getElementById("longitud").value
+
+                var formulario = null,
+                    dataInLocalStorage = JSON.parse(localStorage.getItem("forms"));
+                formulario = JSON.parse(dataInLocalStorage[elementToEdit])
+
+                formulario.nombre = nombre;
+                formulario.Sector = sector;
+                formulario.nivelEscolar = nivel;                
+                formulario.latitud = latitud;
+                formulario.longitud = longitud;
+
+                dataInLocalStorage[elementToEdit] = JSON.stringify(formulario)
+
+                localStorage.setItem("forms", JSON.stringify(dataInLocalStorage))
+                window.location.reload()
+
+            }
     </script>
 </body>
 </html>

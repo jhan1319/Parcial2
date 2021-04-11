@@ -32,25 +32,6 @@ $(document).ready(function (){
         forms.push(JSON.stringify(formData))
         localStorage.setItem("forms", JSON.stringify(forms))
 
-        if (localStorage.getItem("counter") != null){
-            cont = parseInt(localStorage.getItem("counter"));
-            /*formularios.length = 0;
-            formularios.push(JSON.stringify((localStorage.getItem("forms"))))
-            formularios.push(JSON.stringify(formData))*/
-           // console.log("ESTO ES LO ENVIADO EN JSON: " + JSON.stringify(formData))
-           // confirm("Datos Capturados: " + JSON.stringify(formData))
-            //console.log("ESTO SE ENVIARA LOCAL  " + formularios)
-            cont += 1;
-
-            localStorage.setItem("form #" + cont, JSON.stringify(formData))
-            localStorage.setItem("counter", cont.toString())            
-        } else {
-            //formularios.push(JSON.parse(JSON.stringify(formData)))
-            localStorage.setItem("form #" + cont, JSON.stringify(formData))
-            localStorage.setItem("counter", cont.toString())
-        }
-
-
         var user_rol = JSON.parse(localStorage.getItem("loggedUser"))["rol"];        
         if (user_rol == "admin") {
             window.location.href = '/admin'
