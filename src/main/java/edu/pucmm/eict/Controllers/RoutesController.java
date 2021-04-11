@@ -20,67 +20,84 @@ import static io.javalin.apibuilder.ApiBuilder.ws;
 import static j2html.TagCreator.*;
 import static j2html.TagCreator.a;
 
-
 public class RoutesController {
-    //Creando el repositorio de las sesiones recibidas.
-  //  public static List<Session> usuariosConectados = new ArrayList<>();
+    // Creando el repositorio de las sesiones recibidas.
+    // public static List<Session> usuariosConectados = new ArrayList<>();
     public static List<ConnectionsController> usuariosConnected = new ArrayList<>();
     Javalin app;
 
-    public RoutesController(Javalin app){
-      this.app = app;
+    public RoutesController(Javalin app) {
+        this.app = app;
     };
 
-    public void routes(){
-        app.get("/", ctx -> {ctx.render("Templates/login.html");});
+    public void routes() {
+        app.get("/", ctx -> {
 
-        app.routes( () -> {
-
-
-            post("/login", ctx -> {
-                Gson aux = new Gson();
-
-                Usuario user = aux.fromJson(ctx.body(), Usuario.class);
-
-                for (Usuario u:
-                        UsuarioServices.getInstancia().findAll()) {
-                    if (u.getUsuario().contentEquals(user.getUsuario())
-                    && u.getPassword().contentEquals(user.getPassword())){
-
-                        String a = aux.toJson(u, Usuario.class);
-                        System.out.println("ESTO ES EL JSON: " + a);
-                        ctx.result(a); //respuesta hacia el servidor
-                    }else {
-                        ctx.result("Error de credenciales");
-                    }
-
+            Usuario user = ctx.sessionAttribute("loggedUser");
+            if (user == null) {
+                ctx.render("Templates/login.html");
+            } else {
+                if (user.getRol().equalsIgnoreCase("admin")) {
+                    ctx.redirect("/admin");
+                } else {
+                    ctx.redirect("/home");
                 }
+            }
 
+        });
 
+        app.routes(() -> {
+
+            path("/login", () -> {
+                post(ctx -> {
+                    Gson aux = new Gson();
+
+                    Usuario user = aux.fromJson(ctx.body(), Usuario.class);
+
+                    for (Usuario u : UsuarioServices.getInstancia().findAll()) {
+                        if (u.getUsuario().equalsIgnoreCase(user.getUsuario())
+                                && u.getPassword().equals(user.getPassword())) {
+
+                            String a = aux.toJson(u, Usuario.class);
+                            System.out.println("ESTO ES EL JSON: " + a);
+                            ctx.sessionAttribute("loggedUser", u);
+                            ctx.result(a); // respuesta hacia el servidor
+                            break;
+                        } else {
+                            ctx.result("Error de credenciales");
+                        }
+
+                    }
+                });
             });
-
+            path("/logout", () -> {
+                get("/", ctx -> {
+                    ctx.sessionAttribute("loggedUser");
+                    ctx.req.getSession().removeAttribute("loggedUser");
+                    ctx.redirect("/");
+                });
+            });
 
             path("/register", () -> {
 
-                get("/", ctx -> {ctx.render("Templates/user_Register.html");});
+                get("/", ctx -> {
+                    ctx.render("Templates/user_Register.html");
+                });
 
                 post("/addUser", ctx -> {
 
                     String nombre = ctx.formParam("name");
                     String apellido = ctx.formParam("last_name");
                     String usuario = ctx.formParam("username");
-                    String password = ctx.formParam("rol");
-                    String rol = ctx.formParam("password");
+                    String password = ctx.formParam("password");
+                    String rol = ctx.formParam("rol");
 
                     Usuario user = new Usuario(nombre, apellido, usuario, password, rol);
-
                     UsuarioServices.getInstancia().crear(user);
-
+                    ctx.redirect("/admin");
                 });
 
             });
-
-
 
             path("/home", () -> {
                 get("/", ctx -> ctx.render("Templates/home.html"));
@@ -88,63 +105,71 @@ public class RoutesController {
                 get("/mapa", ctx -> ctx.render("/Templates/map.html"));
 
             });
+            path("/admin", () -> {
+                get("/", ctx -> ctx.render("Templates/admin.html"));
+                get("/encuesta", ctx -> ctx.render("Templates/formulario.html"));
+                get("/mapa", ctx -> ctx.render("/Templates/map.html"));
+
+            });
+
+            path("encuestas", () -> {
+                get("/", ctx -> {
+                    ctx.render("/Templates/forms.html");
+                });
+            });
 
             ws("/wsConnect", ws -> {
 
-
-
                 ws.onConnect(ctx -> {
-                    System.out.println("CONEXIÓN INICIADA CON EL CLIENTE ID:=====> "+ctx.getSessionId());
+                    System.out.println("CONEXIÓN INICIADA CON EL CLIENTE ID:=====> " + ctx.getSessionId());
 
                     ConnectionsController sesion = new ConnectionsController(ctx.session, ctx.getSessionId());
                     usuariosConnected.add(sesion);
-                    //usuariosConectados.add(ctx.session);
+                    // usuariosConectados.add(ctx.session);
 
-                    //Connections con = new Connections(ctx.session, ctx.getSessionId());
-                    //usuariosConectados2.add(con);
-                    //Se agrega el cliente a la lista se clientes conectados
+                    // Connections con = new Connections(ctx.session, ctx.getSessionId());
+                    // usuariosConectados2.add(con);
+                    // Se agrega el cliente a la lista se clientes conectados
                 });
 
-                ws.onMessage(ctx -> { //ESTO ES LO QUE VA A SUCEDER AL RECIBIR UN MENSAJE
+                ws.onMessage(ctx -> { // ESTO ES LO QUE VA A SUCEDER AL RECIBIR UN MENSAJE
 
-                    //Puedo leer los header, parametros entre otros.
-                    //PARA RECIBIR DATA DEL CLIENTE
+                    // Puedo leer los header, parametros entre otros.
+                    // PARA RECIBIR DATA DEL CLIENTE
                     ctx.headerMap();
                     ctx.pathParamMap();
                     ctx.queryParamMap();
 
-
                     Gson aux = new Gson();
                     Usuario user = new Usuario();
                     Formulario form = new Formulario();
-                    System.out.println("EL CLIENTE ID: ====>"+ctx.getSessionId()+" HA ENVIADO UN MENSAJE:\n ");
-                    if (ctx.message().length() < 80){
-                        user = aux.fromJson(ctx.message(),Usuario.class);
-                        for (Usuario u:
-                                UsuarioServices.getInstancia().findAll()) {
-                            if (user.getUsuario().contentEquals(u.getUsuario()) &&
-                                 user.getPassword().contentEquals(u.getPassword())){
+                    System.out.println("EL CLIENTE ID: ====>" + ctx.getSessionId() + " HA ENVIADO UN MENSAJE:\n ");
+                    if (ctx.message().length() < 80) {
+                        user = aux.fromJson(ctx.message(), Usuario.class);
+                        for (Usuario u : UsuarioServices.getInstancia().findAll()) {
+                            if (user.getUsuario().contentEquals(u.getUsuario())
+                                    && user.getPassword().contentEquals(u.getPassword())) {
                                 System.out.println("EL USUARIO ES REAL EN LA BDD");
-                                //enviarMensajeAClientesConectados("Login Exitoso", ctx.getSessionId());
+                                // enviarMensajeAClientesConectados("Login Exitoso", ctx.getSessionId());
                                 ctx.send("...");
                                 System.out.println("ENVIADO AL CLIENTE");
-                            }else {
+                            } else {
                                 System.out.println("ERROR DE CREDENCIALES!!");
                             }
 
                         }
-                        System.out.println("EL MENSAJE RECIBIDO ES: =====>"+ user.getUsuario());
+                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + user.getUsuario());
 
-                    }else {
+                    } else {
                         form = aux.fromJson(ctx.message(), Formulario.class);
-                        System.out.println("EL MENSAJE RECIBIDO ES: =====>"+ form.getNombre());
+                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + form.getNombre());
                     }
                     System.out.println("\nFIN DEL MENSAJE");
                 });
 
-                ws.onClose(ctx -> { //ESTO ES LO QUE VA A SUCEDER AL CERRAR UNA SESION
-                    System.out.println("CONEXIÓN CERRADA CON EL CLIENTE ID=====> "+ctx.getSessionId());
-                    //usuariosConectados.remove(ctx.session);
+                ws.onClose(ctx -> { // ESTO ES LO QUE VA A SUCEDER AL CERRAR UNA SESION
+                    System.out.println("CONEXIÓN CERRADA CON EL CLIENTE ID=====> " + ctx.getSessionId());
+                    // usuariosConectados.remove(ctx.session);
                 });
 
                 ws.onError(ctx -> {
@@ -159,45 +184,38 @@ public class RoutesController {
                  */
                 app.wsAfter("/mensajeServidor", wsHandler -> {
                     System.out.println("Filtro para WS despues de la llamada al WS");
-                    //ejecutar cualquier evento despues...
+                    // ejecutar cualquier evento despues...
 
                 });
 
             });
 
-        } );
-
-
-
-
+        });
 
     };
+
     /**
-     * Permite enviar un mensaje al cliente.
-     * Ver uso de la librería: https://j2html.com/
+     * Permite enviar un mensaje al cliente. Ver uso de la librería:
+     * https://j2html.com/
+     * 
      * @param mensaje
      * @param idSesion
      */
     public static void enviarMensajeAClientesConectados(String mensaje, String idSesion) throws IOException {
 
-        for (ConnectionsController aux:
-             usuariosConnected) {
+        for (ConnectionsController aux : usuariosConnected) {
 
-            if (aux.getIdConection().contentEquals(idSesion)){
+            if (aux.getIdConection().contentEquals(idSesion)) {
                 aux.getConection().getRemote().sendString(p(mensaje).render());
                 System.out.println("ENVIADO EL MENSAJE");
             }
         }
         /*
-        }
-        for(Session sesionConectada : usuariosConectados){
-            try {
-
-                sesionConectada.getRemote().sendString(p(mensaje).withClass(color).render());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
-        }
-
+         * } for(Session sesionConectada : usuariosConectados){ try {
+         * 
+         * sesionConectada.getRemote().sendString(p(mensaje).withClass(color).render());
+         * } catch (IOException e) { e.printStackTrace(); }
+         */
+    }
 
 }

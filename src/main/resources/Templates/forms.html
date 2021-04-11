@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>CRUD formulario</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+
+                <h1 class="jumbotron">Listado de Formularios</h1>
+
+                <table id="grid" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Sector</th>
+                            <th>Nivel Academico</th>
+                            <th>Latitud</th>
+                            <th>Longitud</th>
+                        </tr>                    
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function () {
+            var localStorageKeyName = 'form #';
+
+            loadFromLocalStorage();
+
+            // document.querySelector("#btn-send").addEventListener('click', function () {
+            //     var name = document.getElementById("name"),
+            //         sector = document.getElementById("sector"),
+            //         nivel = document.getElementById("nivel");
+
+            //     // Validate
+            //     if (name.value.length === 0 || sector.value.length === 0 || !parseInt(nivel.value)) return;
+
+            //     var form = {
+            //         name: name.value,
+            //         sector: sector.value,
+            //         nivel: nivel.value
+            //     };
+
+            //     // Clean data
+            //     name.value = '';
+            //     sector.value = '';
+            //     nivel.value = '';
+
+            //     // Append to my localStorage
+            //     appendObjectToLocalStorage(form);
+            // })
+
+            // function appendObjectToLocalStorage(obj) {
+            //     var formularios = [],
+            //         dataInLocalStorage = localStorage.getItem(localStorageKeyName);
+
+            //     if (dataInLocalStorage !== null) {
+            //         formularios = JSON.parse(dataInLocalStorage);
+            //     }
+
+            //     formularios.push(obj);
+
+            //     localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
+
+            //     loadFromLocalStorage();
+            // }
+
+            function loadFromLocalStorage() {
+                var formularios = [],
+                    dataInLocalStorage = [],
+                    gridBody = document.querySelector("#grid tbody");
+
+                
+
+                for (let index = 1; index <=  localStorage.getItem("counter"); index++) {                
+                    dataInLocalStorage.push(JSON.parse(localStorage.getItem(localStorageKeyName + index)))
+                    
+                }
+                if (dataInLocalStorage !== null) {
+                    formularios = dataInLocalStorage;
+                }
+
+                // Draw TR from TBODY
+                gridBody.innerHTML = '';
+
+                formularios.forEach(function (x, i) {
+                    var tr = document.createElement("tr"),
+                        tdName = document.createElement("td"),
+                        tdsector = document.createElement("td"),
+                        tdNivel = document.createElement("td"),
+                        tdLatitud = document.createElement("td"),
+                        tdLongitud = document.createElement("td")
+                        tdRemove = document.createElement("td"),
+                        btnRemove = document.createElement("button");
+
+                    tdName.innerHTML = x.nombre;
+                    tdsector.innerHTML = x.Sector;
+                    tdNivel.innerHTML = x.nivelEscolar;
+                    tdLatitud.innerHTML = x.latitud;
+                    tdLongitud.innerHTML = x.longitud;
+
+                    btnRemove.textContent = 'Remove';
+                    btnRemove.className = 'btn btn-xs btn-danger';
+                    btnRemove.addEventListener('click', function(){
+                        removeFromLocalStorage(i);
+                    });
+
+                    tdRemove.appendChild(btnRemove);
+
+                    tr.appendChild(tdName);
+                    tr.appendChild(tdsector);
+                    tr.appendChild(tdNivel);
+                    tr.appendChild(tdLatitud);
+                    tr.appendChild(tdLongitud);
+                    tr.appendChild(tdRemove);
+                    
+
+                    gridBody.appendChild(tr);
+                });
+            }
+
+            // function removeFromLocalStorage(index){
+            //     var formularios = [],
+            //         dataInLocalStorage = localStorage.getItem(localStorageKeyName);
+
+            //     formularios = JSON.parse(dataInLocalStorage);
+
+            //     formularios.splice(index, 1);
+
+            //     localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
+
+            //     loadFromLocalStorage();
+            // }
+        }
+    </script>
+</body>
+</html>
