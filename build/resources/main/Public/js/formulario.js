@@ -24,6 +24,14 @@ $(document).ready(function (){
             user: JSON.parse(localStorage.getItem("loggedUser"))["nombre"]
         };
 
+        var forms = [];
+        var formsInLocalStorage = JSON.parse(localStorage.getItem("forms"))
+        if (formsInLocalStorage !== null) {
+            forms = formsInLocalStorage
+        }
+        forms.push(JSON.stringify(formData))
+        localStorage.setItem("forms", JSON.stringify(forms))
+
         if (localStorage.getItem("counter") != null){
             cont = parseInt(localStorage.getItem("counter"));
             /*formularios.length = 0;

@@ -32,7 +32,7 @@
 
     <script>
         window.onload = function () {
-            var localStorageKeyName = 'form #';
+            var localStorageKeyName = 'forms';
 
             loadFromLocalStorage();
 
@@ -76,15 +76,9 @@
 
             function loadFromLocalStorage() {
                 var formularios = [],
-                    dataInLocalStorage = [],
+                    dataInLocalStorage = JSON.parse(localStorage.getItem("forms")),
                     gridBody = document.querySelector("#grid tbody");
-
-                
-
-                for (let index = 1; index <=  localStorage.getItem("counter"); index++) {                
-                    dataInLocalStorage.push(JSON.parse(localStorage.getItem(localStorageKeyName + index)))
-                    
-                }
+                            
                 if (dataInLocalStorage !== null) {
                     formularios = dataInLocalStorage;
                 }
@@ -93,6 +87,8 @@
                 gridBody.innerHTML = '';
 
                 formularios.forEach(function (x, i) {
+                    parsed = JSON.parse(x)
+                    console.log(parsed)
                     var tr = document.createElement("tr"),
                         tdName = document.createElement("td"),
                         tdsector = document.createElement("td"),
@@ -102,11 +98,11 @@
                         tdRemove = document.createElement("td"),
                         btnRemove = document.createElement("button");
 
-                    tdName.innerHTML = x.nombre;
-                    tdsector.innerHTML = x.Sector;
-                    tdNivel.innerHTML = x.nivelEscolar;
-                    tdLatitud.innerHTML = x.latitud;
-                    tdLongitud.innerHTML = x.longitud;
+                    tdName.innerHTML = parsed.nombre;
+                    tdsector.innerHTML = parsed.Sector;
+                    tdNivel.innerHTML = parsed.nivelEscolar;
+                    tdLatitud.innerHTML = parsed.latitud;
+                    tdLongitud.innerHTML = parsed.longitud;
 
                     btnRemove.textContent = 'Remove';
                     btnRemove.className = 'btn btn-xs btn-danger';
@@ -128,18 +124,19 @@
                 });
             }
 
-            // function removeFromLocalStorage(index){
-            //     var formularios = [],
-            //         dataInLocalStorage = localStorage.getItem(localStorageKeyName);
-
-            //     formularios = JSON.parse(dataInLocalStorage);
-
-            //     formularios.splice(index, 1);
-
-            //     localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
-
-            //     loadFromLocalStorage();
-            // }
+            function removeFromLocalStorage(i){
+                var formularios = [],
+                    dataInLocalStorage = JSON.parse(localStorage.getItem("forms"));
+                                        
+                formularios = dataInLocalStorage;
+                console.log(formularios)
+                formularios.splice(i, 1);
+                console.log(i)
+                console.log(formularios)
+                localStorage.setItem(localStorageKeyName, JSON.stringify(formularios));
+                
+                loadFromLocalStorage();
+            }
         }
     </script>
 </body>
