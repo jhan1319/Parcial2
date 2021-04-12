@@ -29,12 +29,13 @@ public class Formulario implements Serializable {
     public Formulario() {
     }
 
-    public Formulario(String nombre, String sector, String nivelEscolar, String latitud, String longitud) {
+    public Formulario(String nombre, String sector, String nivelEscolar, String latitud, String longitud, Usuario user) {
         this.nombre = nombre;
         Sector = sector;
         this.nivelEscolar = nivelEscolar;
         this.latitud = latitud;
         this.longitud = longitud;
+        this.user = user;
     }
 
     public int getId() {

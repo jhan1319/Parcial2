@@ -16,6 +16,23 @@ public class UsuarioServices extends GestionDB<Usuario> {
         return instancia;
     };
 
+    public static Usuario findUserByUsuario(String user){
+
+        Usuario user1 = new Usuario();
+
+        for (Usuario u:
+                UsuarioServices.getInstancia().findAll()) {
+            if (u.getUsuario().contentEquals(user)){
+
+                user1 = u;
+                break;
+            }
+        }
+
+        return user1;
+
+    }
+
 
 
 }

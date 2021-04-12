@@ -21,7 +21,7 @@ $(document).ready(function (){
             nivelEscolar: $("#gradoEscolar").val(),
             latitud: latitude,
             longitud: longitude,
-            user: JSON.parse(localStorage.getItem("loggedUser"))["nombre"]
+            user: JSON.parse(localStorage.getItem("loggedUser"))["usuario"]
         };
 
         var forms = [];

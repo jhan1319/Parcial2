@@ -1,17 +1,23 @@
 package edu.pucmm.eict.Controllers;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import edu.pucmm.eict.Entidades.Formulario;
 import edu.pucmm.eict.Entidades.Usuario;
+import edu.pucmm.eict.Servicios.Converter;
+import edu.pucmm.eict.Servicios.FormReceived;
+import edu.pucmm.eict.Servicios.Formulario_Service;
 import edu.pucmm.eict.Servicios.UsuarioServices;
 import io.javalin.Javalin;
 import io.javalin.apibuilder.ApiBuilder;
+import org.eclipse.jetty.util.ajax.JSON;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.common.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
@@ -55,9 +61,8 @@ public class RoutesController {
                     Usuario user = aux.fromJson(ctx.body(), Usuario.class);
 
                     for (Usuario u : UsuarioServices.getInstancia().findAll()) {
-                        if (u.getUsuario().equalsIgnoreCase(user.getUsuario())
+                        if (u.getUsuario().contentEquals(user.getUsuario())
                                 && u.getPassword().equals(user.getPassword())) {
-
                             String a = aux.toJson(u, Usuario.class);
                             System.out.println("ESTO ES EL JSON: " + a);
                             ctx.sessionAttribute("loggedUser", u);
@@ -140,30 +145,31 @@ public class RoutesController {
                     ctx.pathParamMap();
                     ctx.queryParamMap();
 
-                    Gson aux = new Gson();
-                    Usuario user = new Usuario();
-                    Formulario form = new Formulario();
-                    System.out.println("EL CLIENTE ID: ====>" + ctx.getSessionId() + " HA ENVIADO UN MENSAJE:\n ");
-                    if (ctx.message().length() < 80) {
-                        user = aux.fromJson(ctx.message(), Usuario.class);
-                        for (Usuario u : UsuarioServices.getInstancia().findAll()) {
-                            if (user.getUsuario().contentEquals(u.getUsuario())
-                                    && user.getPassword().contentEquals(u.getPassword())) {
-                                System.out.println("EL USUARIO ES REAL EN LA BDD");
-                                // enviarMensajeAClientesConectados("Login Exitoso", ctx.getSessionId());
-                                ctx.send("...");
-                                System.out.println("ENVIADO AL CLIENTE");
-                            } else {
-                                System.out.println("ERROR DE CREDENCIALES!!");
-                            }
+                    FormReceived data = Converter.fromJsonString(ctx.message());
+                    System.out.println("ESTE ES EL MENSAJE CONVERTIDO " + data.getNombre());
 
-                        }
-                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + user.getUsuario());
+                    Formulario f = new Formulario(data.getNombre(), data.getSector(), data.getNivelEscolar(),
+                                     data.getLatitud(), data.getLongitud(), UsuarioServices.findUserByUsuario(data.getUser()));
 
-                    } else {
-                        form = aux.fromJson(ctx.message(), Formulario.class);
-                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + form.getNombre());
+                    System.out.println("EL ID DEL FORMULARIO NUEVOX////////// " + f.getId());
+
+                    if(Formulario_Service.findByParams(data.getNombre(), data.getSector(),data.getNivelEscolar())){
+                        System.out.println("////////////LOS FORMULARIOS YA EXISTEN EN LA BDD////////////");
+                    }else {
+                        Formulario_Service.getInstancia().crear(f);
+                        System.out.println("////////////INGRESADOS LOS FORMS EN LA BDD////////////");
                     }
+
+
+                   // dataList.add(aux.fromJson(ctx.message(), Formulario.class));
+
+                    //Usuario user = new Usuario();
+                    //Formulario form = new Formulario();
+                    System.out.println("EL CLIENTE ID: ====>" + ctx.getSessionId() + " HA ENVIADO UN MENSAJE:\n ");
+
+                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + ctx.message());
+                        //form = aux.fromJson(ctx.message(), Formulario.class); //aquí se convierte en clase el JSON recibido
+                       // System.out.println("EL MENSAJE RECIBIDO ES: =====>" + form.getNombre());
                     System.out.println("\nFIN DEL MENSAJE");
                 });
 
