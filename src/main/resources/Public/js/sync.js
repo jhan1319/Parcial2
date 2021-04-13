@@ -7,28 +7,7 @@ var tiempoReconectar = 5000;
     window.onload = function () {
     var localStorageKeyName = 'forms';
     loadFromLocalStorage();
-    // document.querySelector("#btn-send").addEventListener('click', function () {
-    //     var name = document.getElementById("name"),
-    //         sector = document.getElementById("sector"),
-    //         nivel = document.getElementById("nivel");
 
-    //     // Validate
-    //     if (name.value.length === 0 || sector.value.length === 0 || !parseInt(nivel.value)) return;
-
-    //     var form = {
-    //         name: name.value,
-    //         sector: sector.value,
-    //         nivel: nivel.value
-    //     };
-
-    //     // Clean data
-    //     name.value = '';
-    //     sector.value = '';
-    //     nivel.value = '';
-
-    //     // Append to my localStorage
-    //     appendObjectToLocalStorage(form);
-    // })
 
     function loadFromLocalStorage(formularioToEdit) {
 
@@ -175,6 +154,8 @@ $(document).ready(function () {
         )
         //webSocket.send(json);
         console.log("ARCHIVOS ENVIADOS!")
+        window.alert("ARCHIVOS ENVIADOS!")
+        // window.location.reload()
     })
 
 

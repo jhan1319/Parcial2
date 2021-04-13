@@ -7,12 +7,21 @@ var map = new mapboxgl.Map({
 });
 
 var count = parseInt(localStorage.getItem("counter"));
+var fm = [];
+ fm.push(localStorage.getItem("forms"));
+let fjson = JSON.parse(fm.toString());
+ //console.log("ESTO ES FM "+ JSON.parse(fm.toString()));
+let json;
+if (fm != null) {
+    for (let i = 0; i <= fm.length ; i++) {
 
-if (count != null){
-    for (let i = 0 ; i <= count ; i++){
-        let f = localStorage.getItem("form #" + i)
+        json = JSON.parse(JSON.stringify(fjson[i]))
 
-        marcadores(JSON.parse(f)["latitud"],JSON.parse(f)["longitud"])
+        //console.log("ESTO ES EL JSON "+ JSON.parse(json))
+
+        //console.log("ESTA ES LA LATITUD  " + JSON.parse(json)["latitud"]);
+
+        marcadores(JSON.parse(json)["latitud"],JSON.parse(json)["longitud"])
         //console.log(JSON.parse(f)["latitud"])
     }
 }

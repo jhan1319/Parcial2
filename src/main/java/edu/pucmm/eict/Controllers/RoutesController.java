@@ -16,7 +16,9 @@ import org.eclipse.jetty.websocket.common.WebSocketSession;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -122,6 +124,55 @@ public class RoutesController {
                     ctx.render("/Templates/forms.html");
                 });
             });
+            path("/list-forms", () -> {
+                get("/", ctx -> {
+                    Map<String, Object> model = new HashMap<>();
+                    List<Formulario> forms = Formulario_Service.getInstancia().findAll();
+                    model.put("forms", forms);
+                    ctx.render("/templates/list-forms.html", model);
+                });
+            });
+
+            path("crud-users", () -> {
+                get("/", ctx -> {
+                    Map<String, Object> model = new HashMap<>();
+                    List<Usuario> usuarios = UsuarioServices.getInstancia().findAll();
+                    model.put("usuarios", usuarios);
+                    ctx.render("/templates/crud-users.html", model);
+                });
+                get("/delete/:id", ctx -> {
+                    Integer id = ctx.pathParam("id", Integer.class).get();
+                    UsuarioServices.getInstancia().eliminar(id);
+                    ctx.redirect("/crud-users");
+                });
+                get("/edit/:id", ctx -> {
+                    Integer id = ctx.pathParam("id", Integer.class).get();
+                    Usuario u = UsuarioServices.getInstancia().find(id);
+
+                    Map<String, Object> model = new HashMap<>();
+                    model.put("usuario", u);
+                    ctx.render("/templates/edit-user.html", model);
+                });
+                post("/edit/", ctx -> {
+                    Integer id = Integer.valueOf(ctx.formParam("id"));
+                    String nombre = ctx.formParam("nombre");
+                    String apellido = ctx.formParam("apellido");
+                    String usuario = ctx.formParam("usuario");
+                    String password = ctx.formParam("password");
+                    String rol = ctx.formParam("rol");
+
+                    Usuario u = UsuarioServices.getInstancia().find(id);
+
+                    u.setNombre(nombre);
+                    u.setApellido(apellido);
+                    u.setUsuario(usuario);
+                    u.setPassword(password);
+                    u.setRol(rol);
+
+                    UsuarioServices.getInstancia().editar(u);
+                    ctx.redirect("/crud-users");
+                });
+            });
 
             ws("/wsConnect", ws -> {
 
@@ -149,27 +200,27 @@ public class RoutesController {
                     System.out.println("ESTE ES EL MENSAJE CONVERTIDO " + data.getNombre());
 
                     Formulario f = new Formulario(data.getNombre(), data.getSector(), data.getNivelEscolar(),
-                                     data.getLatitud(), data.getLongitud(), UsuarioServices.findUserByUsuario(data.getUser()));
+                            data.getLatitud(), data.getLongitud(), UsuarioServices.findUserByUsuario(data.getUser()));
 
                     System.out.println("EL ID DEL FORMULARIO NUEVOX////////// " + f.getId());
 
-                    if(Formulario_Service.findByParams(data.getNombre(), data.getSector(),data.getNivelEscolar())){
+                    if (Formulario_Service.findByParams(data.getNombre(), data.getSector(), data.getNivelEscolar())) {
                         System.out.println("////////////LOS FORMULARIOS YA EXISTEN EN LA BDD////////////");
-                    }else {
+                    } else {
                         Formulario_Service.getInstancia().crear(f);
                         System.out.println("////////////INGRESADOS LOS FORMS EN LA BDD////////////");
                     }
 
+                    // dataList.add(aux.fromJson(ctx.message(), Formulario.class));
 
-                   // dataList.add(aux.fromJson(ctx.message(), Formulario.class));
-
-                    //Usuario user = new Usuario();
-                    //Formulario form = new Formulario();
+                    // Usuario user = new Usuario();
+                    // Formulario form = new Formulario();
                     System.out.println("EL CLIENTE ID: ====>" + ctx.getSessionId() + " HA ENVIADO UN MENSAJE:\n ");
 
-                        System.out.println("EL MENSAJE RECIBIDO ES: =====>" + ctx.message());
-                        //form = aux.fromJson(ctx.message(), Formulario.class); //aquí se convierte en clase el JSON recibido
-                       // System.out.println("EL MENSAJE RECIBIDO ES: =====>" + form.getNombre());
+                    System.out.println("EL MENSAJE RECIBIDO ES: =====>" + ctx.message());
+                    // form = aux.fromJson(ctx.message(), Formulario.class); //aquí se convierte en
+                    // clase el JSON recibido
+                    // System.out.println("EL MENSAJE RECIBIDO ES: =====>" + form.getNombre());
                     System.out.println("\nFIN DEL MENSAJE");
                 });
 
