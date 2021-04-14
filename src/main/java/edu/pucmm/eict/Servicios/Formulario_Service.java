@@ -31,6 +31,7 @@ public class Formulario_Service extends GestionDB<Formulario> {
                 if (f.getNombre().contentEquals(nombre) && f.getSector().contentEquals(sector)
                         && f.getNivelEscolar().contentEquals(nivelEscolar)){
                     x = true;
+                    break;
                 }else {
                     x = false;
                 }

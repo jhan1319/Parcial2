@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
@@ -128,6 +130,17 @@ public class RoutesController {
                 get("/", ctx -> {
                     Map<String, Object> model = new HashMap<>();
                     List<Formulario> forms = Formulario_Service.getInstancia().findAll();
+                    List<String> latitudes = new ArrayList<>();
+                    List<String> longitudes = new ArrayList<>();
+
+                    /*for (Formulario f:
+                         forms) {
+                        latitudes.add(f.getLatitud());
+                        longitudes.add(f.getLongitud());
+                    }*/
+
+
+
                     model.put("forms", forms);
                     ctx.render("/templates/list-forms.html", model);
                 });

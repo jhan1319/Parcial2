@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
+        <script src='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css' rel='stylesheet' />
         <title>Formularios</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -87,13 +89,54 @@
                             <td class="row-data" th:text="${form.nombre}">nombre</td>
                             <td class="row-data" th:text="${form.Sector}">sector</td>
                             <td class="row-data" th:text="${form.nivelEscolar}">nivel</td>
-                            <td class="row-data" th:text="${form.latitud}">latitud</td>
-                            <td class="row-data" th:text="${form.longitud}">longitud</td>                            
+                            <td class="row-data" id="txtLatitud" th:text="${form.latitud}">latitud</td>
+                            <td class="row-data" id="txtLongitud" th:text="${form.longitud}">longitud</td>
                       </tr>
                     </tbody>
                   </table>
+                <div style="background: #0f091e">
+                    <h2 style="float: left ; color: #9fcdff">Lugares Encuestados:</h2>
+                </div>
+                <div id='map' style='width: 1200px; height: 500px;'></div>
             </div>
             <br><br>
         </div> 
     </body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossOrigin="anonymous"></script>
+    <script src="../js/mapAdmin.js"></script>
+
+ <script th:inline="javascript">
+
+     mapboxgl.accessToken = 'pk.eyJ1IjoiamhhbjEzMTkiLCJhIjoiY2tuNzVwZDJ6MGt0azJubTEzNThoaW16MSJ9.66OOhUKKOgPJ8Pqw97IBtw';
+     var map = new mapboxgl.Map({
+         container: 'map',
+         style: 'mapbox://styles/mapbox/streets-v11',
+         center: [-70.6931,19.4655551],
+         zoom: 13
+     });
+
+    var form = [];
+    form = /*[[${forms.toArray}]]*/
+    var i = 0;
+    var size = /*[[${forms.size}]]*/
+
+    var mySubString = JSON.stringify(form).substring(
+        JSON.stringify(form).lastIndexOf("[") + 1,
+        JSON.stringify(form).lastIndexOf("]")
+    );
+    form.forEach((item) =>{
+        marcadores(JSON.parse(JSON.stringify(item))["latitud"], JSON.parse(JSON.stringify(item))["longitud"])
+    })
+
+     function marcadores(lat, long){
+
+         var marker1 = new mapboxgl.Marker({color: 'black'})
+             .setLngLat([long, lat])
+             .addTo(map);
+     }
+
+    console.log("ESTO SON "+ latitudes)
+</script>
 </html>
