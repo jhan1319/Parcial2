@@ -43,8 +43,6 @@ public class RoutesController {
     public void routes() {
         app.get("/", ctx -> {
 
-
-
             Usuario user = ctx.sessionAttribute("loggedUser");
             if (user == null) {
                 ctx.render("Templates/login.html");
@@ -57,7 +55,6 @@ public class RoutesController {
             }
 
         });
-
 
         app.routes(() -> {
 
@@ -136,13 +133,10 @@ public class RoutesController {
                     List<String> latitudes = new ArrayList<>();
                     List<String> longitudes = new ArrayList<>();
 
-                    /*for (Formulario f:
-                         forms) {
-                        latitudes.add(f.getLatitud());
-                        longitudes.add(f.getLongitud());
-                    }*/
-
-
+                    /*
+                     * for (Formulario f: forms) { latitudes.add(f.getLatitud());
+                     * longitudes.add(f.getLongitud()); }
+                     */
 
                     model.put("forms", forms);
                     ctx.render("/Templates/list-forms.html", model);
