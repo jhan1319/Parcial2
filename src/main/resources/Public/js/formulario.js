@@ -61,8 +61,8 @@ $(document).ready(function (){
     }
 
     function conectar() {
-        webSocket = new WebSocket("wss://" + location.hostname + ":" + location.port + "/wsConnect");
-
+        webSocket = new WebSocket("wss://" + location.hostname + "/wsConnect");
+	console.log(location.hostname + ":" + location.port)
         //indicando los eventos:
         webSocket.onmessage = function(data){recibirInformacionServidor(data);};
         webSocket.onopen  = function(e){ console.log("Conectado - status "+this.readyState); };
