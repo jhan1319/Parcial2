@@ -162,7 +162,7 @@ $(document).ready(function () {
 })
 
 function conectar() {
-    webSocket = new WebSocket("ws://" + location.hostname + ":" + location.port + "/wsConnect");
+    webSocket = new WebSocket("wss://" + location.hostname + ":" + location.port + "/wsConnect");
 
     //indicando los eventos:
     webSocket.onmessage = function(data){recibirInformacionServidor(data);};
