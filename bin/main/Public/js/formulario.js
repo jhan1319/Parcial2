@@ -12,8 +12,6 @@ $(document).ready(function (){
 
     $("#btnRegister").click(function (){
 
-
-
         var formData = {//ESTO ES UN JSON DEL FORMULARIO REALIZADO
            // type: "form................",
             nombre: $("#fullName").val(),

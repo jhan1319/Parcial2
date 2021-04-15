@@ -12,11 +12,6 @@ $(document).ready(function (){
 
     $("#btnRegister").click(function (){
 
-        if (latitude == null && longitude == null){
-            latitude = null
-            longitude = null
-        }
-
         var formData = {//ESTO ES UN JSON DEL FORMULARIO REALIZADO
            // type: "form................",
             nombre: $("#fullName").val(),
