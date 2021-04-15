@@ -43,6 +43,8 @@ public class RoutesController {
     public void routes() {
         app.get("/", ctx -> {
 
+
+
             Usuario user = ctx.sessionAttribute("loggedUser");
             if (user == null) {
                 ctx.render("Templates/login.html");
@@ -55,6 +57,7 @@ public class RoutesController {
             }
 
         });
+
 
         app.routes(() -> {
 

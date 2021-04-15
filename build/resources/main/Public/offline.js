@@ -6,14 +6,26 @@
 var CACHE_NAME = 'mi-app-cache-v1';
 //listado de ruta para fallback.
 var urlsToCache = [
-    '/home',
-    '/home/encuesta',
-    '/home/mapa',
-    '/html5/ejemploIndexedDb.html',
-    '/html5/offline.html'
+     '/',
+    '/home', //
+    '/home/encuesta',//
+    // '/home/mapa',//
+    // '/encuestas',
+    '/js/formulario.js', //lo funde
+    // '/js/login.js',
+    // '/js/map.js',
+    // '/js/sync.js',
+    '/js/bootstrap.min.js', //
+    '/js/bootstrap.bundle.min.js',//
+    '/js/popper.min.js',//
+    '/css/style.css',//
+    '/css/styleForm.css',//
+    '/css/styleRegister.css',//
+    '/js/jquery-3.6.0.min.js'
+    // '../images/bg.jpg'
 ];
 
-var fallback = "../Templates/home.html"
+var fallback = "/Templates/home.html"
 
 //representa el evento cuando se esta instalando el services workers.
 self.addEventListener('install', function(event) {

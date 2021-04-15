@@ -23,6 +23,12 @@ public class main {
         // UsuarioServices.getInstancia().getEntityManager();
         Usuario user = new Usuario("administrador", "Apellido_Admin", "admin", "admin", "admin");
         UsuarioServices.getInstancia().crear(user);
+
+
+        app.after(ctx -> {
+            //System.out.println("Enviando el header de seguridad para el Service Worker");
+            ctx.header("Service-Worker-Allowed", "/");
+        });
     }
 
 }
