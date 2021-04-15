@@ -4,7 +4,7 @@ $(document).ready(function () {
         e.preventDefault()
         axios({
             method: 'post',
-            url:"http://"+ location.hostname + ":" + location.port + "/login",
+            url:"https://"+ location.hostname + ":" + location.port + "/login",
             data:{
                 usuario: $("#txtUser").val(),
                 password: $("#txtPassword").val()
