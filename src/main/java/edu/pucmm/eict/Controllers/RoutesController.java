@@ -145,7 +145,7 @@ public class RoutesController {
 
 
                     model.put("forms", forms);
-                    ctx.render("/templates/list-forms.html", model);
+                    ctx.render("/Templates/list-forms.html", model);
                 });
             });
 
@@ -154,7 +154,7 @@ public class RoutesController {
                     Map<String, Object> model = new HashMap<>();
                     List<Usuario> usuarios = UsuarioServices.getInstancia().findAll();
                     model.put("usuarios", usuarios);
-                    ctx.render("/templates/crud-users.html", model);
+                    ctx.render("/Templates/crud-users.html", model);
                 });
                 get("/delete/:id", ctx -> {
                     Integer id = ctx.pathParam("id", Integer.class).get();
@@ -167,7 +167,7 @@ public class RoutesController {
 
                     Map<String, Object> model = new HashMap<>();
                     model.put("usuario", u);
-                    ctx.render("/templates/edit-user.html", model);
+                    ctx.render("/Templates/edit-user.html", model);
                 });
                 post("/edit/", ctx -> {
                     Integer id = Integer.valueOf(ctx.formParam("id"));
